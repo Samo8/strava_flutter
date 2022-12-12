@@ -6,7 +6,10 @@ import 'package:strava_flutter/domain/model/model_detailed_activity.dart';
 import 'package:strava_flutter/domain/model/model_lap.dart';
 import 'package:strava_flutter/domain/model/model_summary_activity.dart';
 import 'package:strava_flutter/domain/model/model_summary_athlete.dart';
+import 'package:strava_flutter/domain/model/model_tcx_activities.dart';
 import 'package:strava_flutter/domain/repository/repository_activity.dart';
+
+import 'package:xml/xml.dart';
 
 import 'client.dart';
 
@@ -14,6 +17,26 @@ class RepositoryActivityImpl extends RepositoryActivity{
   @override
   Future<DetailedActivity> getActivity(int activityId) {
     return ApiClient.getRequest(endPoint: "/v3/activities/$activityId", dataConstructor: (data)=>DetailedActivity.fromJson(Map<String,dynamic>.from(data)));
+  }
+
+  @override
+  Future<TCXActivity> getTCXActivity(int activityId) {
+    return ApiClient.getRequest(endPoint: "/v3/activities/$activityId/export_tcx", dataConstructor: (data) { 
+      final xmlActivities = XmlDocument.parse(data).getElement('TrainingCenterDatabase')?.getElement('Activities');
+      if (xmlActivities != null)
+      {
+        final activities = TCXActivities.fromXml(xmlActivities).activities;
+        if (activities != null)
+        {
+          activities.single;
+        }
+        else
+        {
+          TCXActivity();
+        }
+      }
+      return TCXActivity();
+    });
   }
 
   @override
