@@ -4,12 +4,14 @@ import 'package:strava_flutter/domain/model/model_activity_zone.dart';
 import 'package:strava_flutter/domain/model/model_comment.dart';
 import 'package:strava_flutter/domain/model/model_detailed_activity.dart';
 import 'package:strava_flutter/domain/model/model_lap.dart';
+import 'package:strava_flutter/domain/model/model_tcx_activities.dart';
 import 'package:strava_flutter/domain/model/model_summary_activity.dart';
 import 'package:strava_flutter/domain/model/model_summary_athlete.dart';
 
 abstract class RepositoryActivity{
 
   Future<DetailedActivity> getActivity(int activityId);
+  Future<TCXActivity> getTCXActivity(int activityId);
   Future<List<Comment>> listActivityComments(int activityId);
   Future<List<SummaryAthlete>> listActivityKudoers(int activityId);
   Future<List<Lap>> getLapsByActivityId(int activityId);
