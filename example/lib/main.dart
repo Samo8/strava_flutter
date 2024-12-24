@@ -4,11 +4,7 @@ import 'package:example/examples/authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:strava_flutter/domain/model/model_authentication_response.dart';
-import 'package:strava_flutter/domain/model/model_authentication_scopes.dart';
-import 'package:strava_flutter/domain/model/model_fault.dart';
-import 'package:strava_flutter/strava_client.dart';
-import 'secret.dart';
+import 'package:strava_client/strava_client.dart';
 
 void main() => runApp(MyApp());
 
@@ -41,7 +37,7 @@ class _StravaFlutterPageState extends State<StravaFlutterPage> {
 
   @override
   void initState() {
-    stravaClient = StravaClient(secret: secret, clientId: clientId);
+    stravaClient = StravaClient(secret: '', clientId: '');
     super.initState();
   }
 

@@ -81,4 +81,6 @@ abstract class RepositoryActivity {
     int activityId,
     UpdateActivityRequest request,
   );
+
+  Future<TCXActivity> getTCXActivity(int activityId);
 }

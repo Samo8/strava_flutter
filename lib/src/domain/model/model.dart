@@ -28,3 +28,4 @@ export 'model_summary_segment.dart';
 export 'model_upload.dart';
 export 'model_upload_request.dart';
 export 'model_zones.dart';
+export 'model_tcx_activities.dart';

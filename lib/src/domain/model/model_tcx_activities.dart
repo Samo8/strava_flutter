@@ -18,12 +18,11 @@ class TCXActivities {
 
   TCXActivities.fromXml(XmlElement xml) {
     var xmlActivitiesList = xml.findElements('Activity');
-    if (xmlActivitiesList != null) {
-      activities = [];
-      xmlActivitiesList.forEach((v) {
-        activities?.add(TCXActivity.fromXml(v));
-      });
-    }
+
+    activities = [];
+    xmlActivitiesList.forEach((v) {
+      activities?.add(TCXActivity.fromXml(v));
+    });
   }
 
   Map<String, dynamic> toJson() {
@@ -59,16 +58,14 @@ class TCXActivity {
   }
 
   TCXActivity.fromXml(XmlElement xml) {
-    id = xml.findElements('Id').single.text;
+    id = xml.findElements('Id').single.value;
     sport = xml.attributes.where((e) => e.name.local == 'Sport').single.value;
 
     var xmlLapList = xml.findElements('Lap');
-    if (xmlLapList != null) {
-      laps = [];
-      xmlLapList.forEach((v) {
-        laps?.add(TCXLap.fromXml(v));
-      });
-    }
+    laps = [];
+    xmlLapList.forEach((v) {
+      laps?.add(TCXLap.fromXml(v));
+    });
   }
 
   Map<String, dynamic> toJson() {
@@ -94,8 +91,11 @@ class TCXLap {
   TCXLap.fromXml(XmlElement xml) {
     startTime = DateTime.parse(xml.attributes.where((e) => e.name.local == 'StartTime').single.value);
 
-    totalTimeSeconds = double.parse(xml.findElements('TotalTimeSeconds').single.text);
-    distanceMeters = double.parse(xml.findElements('DistanceMeters').single.text);
+    final xmlTotalTimeInSeconds = xml.findElements('TotalTimeSeconds').single.value;
+    final xmlDistanceInMeters = xml.findElements('DistanceMeters').single.value;
+
+    if (xmlTotalTimeInSeconds != null) totalTimeSeconds = double.tryParse(xmlTotalTimeInSeconds);
+    if (xmlDistanceInMeters != null) distanceMeters = double.tryParse(xmlDistanceInMeters);
 
     var xmlAHR = xml.getElement('AverageHeartRateBpm');
     if (xmlAHR != null) {
@@ -103,12 +103,10 @@ class TCXLap {
     }
 
     var xmlTrackList = xml.findElements('Track');
-    if (xmlTrackList != null) {
-      tracks = [];
-      xmlTrackList.forEach((v) {
-        tracks?.add(TCXTrack.fromXml(v));
-      });
-    }
+    tracks = [];
+    xmlTrackList.forEach((v) {
+      tracks?.add(TCXTrack.fromXml(v));
+    });
   }
 
   TCXLap.fromJson(dynamic json) {
@@ -149,12 +147,10 @@ class TCXTrack {
 
   TCXTrack.fromXml(XmlElement xml) {
     var xmlTrackPointsList = xml.findElements('Trackpoint');
-    if (xmlTrackPointsList != null) {
-      trackPoints = [];
-      xmlTrackPointsList.forEach((v) {
-        trackPoints?.add(TCXTrackPoint.fromXml(v));
-      });
-    }
+    trackPoints = [];
+    xmlTrackPointsList.forEach((v) {
+      trackPoints?.add(TCXTrackPoint.fromXml(v));
+    });
   }
 
   TCXTrack.fromJson(dynamic json) {
@@ -185,15 +181,21 @@ class TCXTrackPoint {
   TCXTrackPoint({this.time, this.position, this.altitudeMeters, this.distanceMeters, this.heartRateBpm});
 
   TCXTrackPoint.fromXml(XmlElement xml) {
-    time = DateTime.parse(xml.findElements('Time').single.text);
+    final timeValue = xml.findElements('Time').single.value;
+    if (timeValue != null) {
+      time = DateTime.tryParse(timeValue);
+    }
 
     var xmlPosition = xml.getElement('Position');
     if (xmlPosition != null) {
       position = TCXPosition.fromXml(xmlPosition);
     }
 
-    altitudeMeters = double.parse(xml.findElements('AltitudeMeters').single.text);
-    distanceMeters = double.parse(xml.findElements('DistanceMeters').single.text);
+    final xmlAltitudeMeters = xml.findElements('AltitudeMeters').single.value;
+    final xmlDistanceMeters = xml.findElements('DistanceMeters').single.value;
+
+    if (xmlAltitudeMeters != null) altitudeMeters = double.parse(xmlAltitudeMeters);
+    if (xmlDistanceMeters != null) distanceMeters = double.parse(xmlDistanceMeters);
 
     var xmlHR = xml.getElement('HeartRateBpm');
     if (xmlHR != null) {
@@ -238,8 +240,11 @@ class TCXPosition {
   });
 
   TCXPosition.fromXml(XmlElement xml) {
-    latitudeDegrees = double.parse(xml.findElements('LatitudeDegrees').single.text);
-    longitudeDegrees = double.parse(xml.findElements('LongitudeDegrees').single.text);
+    final xmlLatitudeDegrees = xml.findElements('LatitudeDegrees').single.value;
+    final xmlLongitudeDegrees = xml.findElements('LongitudeDegrees').single.value;
+
+    if (xmlLatitudeDegrees != null) latitudeDegrees = double.parse(xmlLatitudeDegrees);
+    if (xmlLongitudeDegrees != null) longitudeDegrees = double.parse(xmlLongitudeDegrees);
   }
 
   TCXPosition.fromJson(dynamic json) {
@@ -263,9 +268,8 @@ class TCXHeartRateBpm {
   });
 
   TCXHeartRateBpm.fromXml(XmlElement xml) {
-    if (xml.getElement('Value') != null) {
-      value = double.parse(xml.getElement('Value')!.text);
-    }
+    final xmlValue = xml.getElement('Value')?.value;
+    if (xmlValue != null) value = double.parse(xmlValue);
   }
 
   TCXHeartRateBpm.fromJson(dynamic json) {
