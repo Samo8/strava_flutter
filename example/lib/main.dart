@@ -8,8 +8,8 @@ import 'package:strava_flutter/domain/model/model_authentication_response.dart';
 import 'package:strava_flutter/domain/model/model_authentication_scopes.dart';
 import 'package:strava_flutter/domain/model/model_fault.dart';
 import 'package:strava_flutter/strava_client.dart';
+import 'secret.dart';
 
-// import 'secret.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -41,7 +41,7 @@ class _StravaFlutterPageState extends State<StravaFlutterPage> {
 
   @override
   void initState() {
-    stravaClient = StravaClient(secret: '', clientId: '');
+    stravaClient = StravaClient(secret: secret, clientId: clientId);
     super.initState();
   }
 
@@ -60,11 +60,9 @@ class _StravaFlutterPageState extends State<StravaFlutterPage> {
   }
 
   void testAuthentication() {
-    ExampleAuthentication(stravaClient).testAuthentication([
-      AuthenticationScope.profile_read_all,
-      AuthenticationScope.read_all,
-      AuthenticationScope.activity_read_all
-    ], "stravaflutter://redirect").then((token) {
+    ExampleAuthentication(stravaClient).testAuthentication(
+        [AuthenticationScope.profile_read_all, AuthenticationScope.read_all, AuthenticationScope.activity_read_all],
+        "stravaflutter://redirect").then((token) {
       setState(() {
         isLoggedIn = true;
         this.token = token;
@@ -90,9 +88,7 @@ class _StravaFlutterPageState extends State<StravaFlutterPage> {
         title: Text("Flutter Strava Plugin"),
         actions: [
           Icon(
-            isLoggedIn
-                ? Icons.radio_button_checked_outlined
-                : Icons.radio_button_off,
+            isLoggedIn ? Icons.radio_button_checked_outlined : Icons.radio_button_off,
             color: isLoggedIn ? Colors.white : Colors.red,
           ),
           SizedBox(
@@ -140,10 +136,8 @@ class _StravaFlutterPageState extends State<StravaFlutterPage> {
               suffixIcon: TextButton(
                 child: Text("Copy"),
                 onPressed: () {
-                  Clipboard.setData(
-                          ClipboardData(text: _textEditingController.text))
-                      .then((value) =>
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  Clipboard.setData(ClipboardData(text: _textEditingController.text))
+                      .then((value) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text("Copied!"),
                           )));
                 },
